@@ -5,6 +5,7 @@ import { initMessage, saveMessage } from '../_actions/message_actions';
 import Message from './sections/Message';
 import ButtonComponent from './sections/Button';
 import './Chatbot.css';
+import ImageComponent from './sections/Image';
 
 function Chatbot() {
   const dispatch = useDispatch();
@@ -135,15 +136,35 @@ function Chatbot() {
           .values;
 
       return messages.map((el, index) => {
-        if (messages[index].structValue.fields.type.stringValue === 'button') {
-          return (
-            <ButtonComponent
-              key={index}
-              who={message.who}
-              buttonInfo={messages[index].structValue.fields}
-            />
-          );
+        switch (messages[index].structValue.fields.type.stringValue) {
+          case 'button':
+            return (
+              <ButtonComponent
+                key={index}
+                who={message.who}
+                buttonInfo={messages[index].structValue.fields}
+              />
+            );
+          case 'image':
+            return (
+              <ImageComponent
+                key={index}
+                who={message.who}
+                imageInfo={messages[index].structValue.fields}
+              />
+            );
+          default:
+            break;
         }
+        // if (messages[index].structValue.fields.type.stringValue === 'button') {
+        //   return (
+        //     <ButtonComponent
+        //       key={index}
+        //       who={message.who}
+        //       buttonInfo={messages[index].structValue.fields}
+        //     />
+        //   );
+        // }
       });
     }
 

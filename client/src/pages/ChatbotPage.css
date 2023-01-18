@@ -4,9 +4,9 @@
 }
 .learning {
   display: flex;
-  flex-grow: 5;
+  flex: 5 1 0;
 }
 .chatbot {
   display: flex;
-  flex-grow: 2;
+  flex: 2 1 0;
 }
