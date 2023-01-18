@@ -1,0 +1,12 @@
+.chatbotPage {
+  overflow: hidden;
+  display: flex;
+}
+.learning {
+  display: flex;
+  flex-grow: 5;
+}
+.chatbot {
+  display: flex;
+  flex-grow: 2;
+}
