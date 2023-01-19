@@ -1,14 +1,14 @@
 import React from 'react';
-import { Button } from 'antd';
+import Button from '@mui/material/Button';
 import { useDispatch } from 'react-redux';
 import { saveMessage } from './../../_actions/message_actions';
 import Axios from 'axios';
+import { List, ListItem } from '@mui/material';
 
 function ButtonComponent(props) {
   const dispatch = useDispatch();
 
   const sendEvent = async (event) => {
-    //TODO : event API던지기
     const eventQueryVariables = {
       event,
     };
@@ -31,7 +31,7 @@ function ButtonComponent(props) {
         who: 'bot',
         content: {
           text: {
-            text: ' Error just occured, please check the problem',
+            text: ' 서버 오류입니다. 레벨에 맞는 버튼을 다시 눌러주세요.',
           },
         },
       };
@@ -42,14 +42,29 @@ function ButtonComponent(props) {
     sendEvent(props.buttonInfo.event.structValue.fields.name.stringValue);
   };
   return (
-    <Button
-      style={{ margin: '0 0rem 1rem 0' }}
-      onClick={buttonPressHandler}
-      type="primary"
-      block="true"
-    >
-      {props.buttonInfo.text.stringValue}
-    </Button>
+    <List disablePadding="true">
+      <ListItem>
+        {props.buttonInfo.text.stringValue === '수정' ? (
+          <Button
+            variant="outlined"
+            fullWidth="true"
+            color="primary"
+            onClick={buttonPressHandler}
+          >
+            {props.buttonInfo.text.stringValue}
+          </Button>
+        ) : (
+          <Button
+            variant="contained"
+            fullWidth="true"
+            color="primary"
+            onClick={buttonPressHandler}
+          >
+            {props.buttonInfo.text.stringValue}
+          </Button>
+        )}
+      </ListItem>
+    </List>
   );
 }
 

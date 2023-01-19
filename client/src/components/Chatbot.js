@@ -1,11 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import Axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { initMessage, saveMessage } from '../_actions/message_actions';
+import { saveMessage } from '../_actions/message_actions';
 import Message from './sections/Message';
 import ButtonComponent from './sections/Button';
 import './Chatbot.css';
 import ImageComponent from './sections/Image';
+import { TextField } from '@mui/material';
 
 function Chatbot() {
   const dispatch = useDispatch();
@@ -28,7 +29,6 @@ function Chatbot() {
 
   //TODO : API 폴더 분리하기
   const textQuery = async (text) => {
-    //  First  Need to  take care of the message I sent
     let conversation = {
       who: 'user',
       content: {
@@ -39,14 +39,11 @@ function Chatbot() {
     };
 
     dispatch(saveMessage(conversation));
-    // console.log('text I sent', conversation)
 
-    // We need to take care of the message Chatbot sent
     const textQueryVariables = {
       text,
     };
     try {
-      //I will send request to the textQuery ROUTE
       const response = await Axios.post(
         '/api/dialogflow/textQuery',
         textQueryVariables
@@ -65,7 +62,7 @@ function Chatbot() {
         who: 'bot',
         content: {
           text: {
-            text: ' Error just occured, please check the problem',
+            text: ' 서버 오류입니다. 레벨에 맞는 버튼을 다시 눌러주세요.',
           },
         },
       };
@@ -75,12 +72,10 @@ function Chatbot() {
   };
 
   const eventQuery = async (event) => {
-    // We need to take care of the message Chatbot sent
     const eventQueryVariables = {
       event,
     };
     try {
-      //I will send request to the eventQuery ROUTE
       const response = await Axios.post(
         '/api/dialogflow/eventQuery',
         eventQueryVariables
@@ -98,7 +93,7 @@ function Chatbot() {
         who: 'bot',
         content: {
           text: {
-            text: ' Error just occured, please check the problem',
+            text: ' 서버 오류입니다. 레벨에 맞는 버튼을 다시 눌러주세요.',
           },
         },
       };
@@ -112,7 +107,6 @@ function Chatbot() {
         return alert('you need to type somthing first');
       }
 
-      //we will send request to text query route
       textQuery(e.target.value);
 
       e.target.value = '';
@@ -120,8 +114,7 @@ function Chatbot() {
   };
 
   const renderOneMessage = (message, i) => {
-    console.log('message', message);
-    // we need to give some condition here to separate message kinds
+    //console.log('message', message);
 
     // template for normal text
     if (message.content && message.content.text && message.content.text.text) {
@@ -130,7 +123,7 @@ function Chatbot() {
       );
     } else {
       // TODO : expand to all richContents
-      // only for richContents 'buttons', 'images'
+      // now only for richContents 'buttons', 'images'
       const messages =
         message.content.payload.fields.richContent.listValue.values[0].listValue
           .values;
@@ -156,15 +149,6 @@ function Chatbot() {
           default:
             break;
         }
-        // if (messages[index].structValue.fields.type.stringValue === 'button') {
-        //   return (
-        //     <ButtonComponent
-        //       key={index}
-        //       who={message.who}
-        //       buttonInfo={messages[index].structValue.fields}
-        //     />
-        //   );
-        // }
       });
     }
 
@@ -201,6 +185,7 @@ function Chatbot() {
   };
 
   const renderMessage = (returnedMessages) => {
+    //TODO: 하나하나의 메세지에 delay걸기
     if (returnedMessages) {
       return returnedMessages.map((message, i) => {
         return renderOneMessage(message, i);
@@ -215,11 +200,27 @@ function Chatbot() {
       style={{
         height: '100vh',
         width: '100%',
+        backgroundColor: '#fafafa',
       }}
     >
       <div
         style={{
-          height: '93vh',
+          height: '8vh',
+          width: '100%',
+          textAlign: 'center',
+          display: 'grid',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#41a6f6',
+          color: 'white',
+          fontWeight: 'bold',
+        }}
+      >
+        챗봇
+      </div>
+      <div
+        style={{
+          height: '85vh',
           width: '100%',
           overflow: 'auto',
           overflowX: 'hidden',
@@ -228,16 +229,13 @@ function Chatbot() {
         {renderMessage(messagesFromRedux)}
         <div ref={messageEndRef} />
       </div>
-      <input
+      <TextField
         style={{
-          margin: 0,
           width: '100%',
-          height: '7vh',
-          padding: '1rem 0 1rem 1rem',
-          fontSize: '1rem',
-          backgroundColor: '#dedede',
         }}
-        placeholder="메세지를 입력하세요"
+        id="filled-basic"
+        label="정답을 입력하세요"
+        variant="filled"
         onKeyPress={keyPressHanlder}
         type="text"
       />

@@ -25,7 +25,7 @@ router.post('/textQuery', async (req, res) => {
       text: {
         // The query to send to the dialogflow agent
         text: req.body.text,
-        // The language used by the client (en-US)
+        // The language used by the client (ko)
         languageCode: languageCode,
       },
     },
@@ -52,7 +52,7 @@ router.post('/eventQuery', async (req, res) => {
       event: {
         // The query to send to the dialogflow agent
         name: req.body.event,
-        // The language used by the client (en-US)
+        // The language used by the client (ko)
         languageCode: languageCode,
       },
     },
